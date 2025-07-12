@@ -1,0 +1,102 @@
+// RGIT CESS React-based Website with Framer Motion, Dark Mode, and Dynamic Data
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import './App.css';
+
+const Navbar = ({ darkMode, toggleDarkMode }) => (
+  <nav className={`flex justify-center gap-8 py-3 shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-blue-600 text-white'}`}>
+    <a href="#about" className="hover:underline">About</a>
+    <a href="#events" className="hover:underline">Events</a>
+    <a href="#team" className="hover:underline">Team</a>
+    <a href="#contact" className="hover:underline">Contact</a>
+    <button onClick={toggleDarkMode} className="ml-4 px-2 py-1 bg-white text-sm text-black rounded hover:bg-gray-200">{darkMode ? 'Light Mode' : 'Dark Mode'}</button>
+  </nav>
+);
+
+const Hero = () => (
+  <motion.div
+    className="bg-cover bg-center h-[60vh] flex items-center justify-center text-white text-center"
+    style={{ backgroundImage: "url('https://images.unsplash.com/photo-1581090700227-1e8d62b1f838?auto=format&fit=crop&w=1470&q=80')" }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1 }}
+  >
+    <h1 className="text-4xl md:text-6xl bg-black/50 px-6 py-4 rounded-lg">Welcome to CESS Portal</h1>
+  </motion.div>
+);
+
+const Section = ({ id, title, children }) => (
+  <motion.section
+    id={id}
+    className="max-w-5xl mx-auto px-4 py-12"
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    viewport={{ once: true }}
+  >
+    <div className="bg-white dark:bg-gray-900 dark:text-white rounded-xl shadow-lg p-8">
+      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
+      {children}
+    </div>
+  </motion.section>
+);
+
+const Footer = ({ darkMode }) => (
+  <footer className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-blue-800 text-white'} text-center py-6 mt-12`}>
+    <p>&copy; 2025 RGIT CESS. All rights reserved.</p>
+  </footer>
+);
+
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      setEvents([
+        'Code-a-thon 2025',
+        'HackX – RGIT Hackathon',
+        'Tech Talks and Webinars',
+      ]);
+    }, 1000);
+  }, []);
+
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+
+  return (
+    <div className={`${darkMode ? 'bg-gray-950 text-white' : 'bg-gray-50 text-gray-800'} font-poppins min-h-screen`}>
+      <header className={`${darkMode ? 'bg-gray-800' : 'bg-blue-900'} text-white text-center py-6 shadow-md`}>
+        <h1 className="text-3xl font-bold">RGIT Computer Engineering Students' Society (CESS)</h1>
+      </header>
+
+      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Hero />
+
+      <Section id="about" title="About Us">
+        <p>CESS is a student body formed by the Department of Computer Engineering at RGIT. Our mission is to empower students through technical events, workshops, and competitions that foster learning and innovation.</p>
+      </Section>
+
+      <Section id="events" title="Events">
+        {events.length === 0 ? <p>Loading events...</p> : (
+          <ul className="list-disc pl-6">
+            {events.map((event, index) => <li key={index}>{event}</li>)}
+          </ul>
+        )}
+      </Section>
+
+      <Section id="team" title="Our Team">
+        <p>Meet our dynamic team of student leaders, faculty coordinators, and developers driving the society's success.</p>
+      </Section>
+
+      <Section id="contact" title="Contact Us">
+        <p>Email: <a className="text-blue-600 hover:underline" href="mailto:cess@rgit.ac.in">cess@rgit.ac.in</a></p>
+        <p>Address: RGIT Campus, Mumbai, Maharashtra</p>
+      </Section>
+
+      <Footer darkMode={darkMode} />
+    </div>
+  );
+}
+
+export default App;
